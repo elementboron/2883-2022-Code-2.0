@@ -46,6 +46,7 @@ public class RobotContainer {
                 () -> robotCentric.getAsBoolean()
             )
         );
+        configureButtonBindings();
 	}
 
     /**
