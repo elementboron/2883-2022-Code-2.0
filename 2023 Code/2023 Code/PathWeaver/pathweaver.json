@@ -1,9 +1,9 @@
 {
   "lengthUnit": "Meter",
   "exportUnit": "Always Meters",
-  "maxVelocity": 3.0,
+  "maxVelocity": 4.5,
   "maxAcceleration": 1.0,
-  "trackWidth": 28.0,
-  "gameName": "Rapid React",
-  "outputDir": ""
+  "trackWidth": 0.711,
+  "gameName": "Charged Up",
+  "outputDir": "../src/main/deploy/paths"
 }
