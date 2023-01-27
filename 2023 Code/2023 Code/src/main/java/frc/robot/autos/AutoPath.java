@@ -1,6 +1,7 @@
 package frc.robot.autos;
 
 import frc.robot.Constants;
+import frc.robot.autos.Actions.WaitAction;
 import frc.robot.subsystems.Swerve;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class AutoPath extends SequentialCommandGroup {
     public AutoPath(Swerve s_Swerve){
@@ -27,9 +29,12 @@ public class AutoPath extends SequentialCommandGroup {
                 .setKinematics(Constants.Swerve.swerveKinematics);
 
         // An example trajectory to follow.  All units in meters.
-        String file_path = "paths/Test.path";
-        
+        String file_path = "paths/ObstacleCourse.path";
         Trajectory exampleTrajectory = AutoTrajectoryReader.generateTrajectoryFromFile(file_path, config);
+        String file_path_test = "paths/Test.path";
+        Trajectory exampleTrajectory1 = AutoTrajectoryReader.generateTrajectoryFromFile(file_path_test, config);
+
+
 
         var thetaController =
             new ProfiledPIDController(
@@ -47,10 +52,25 @@ public class AutoPath extends SequentialCommandGroup {
                 s_Swerve::setModuleStates,
                 s_Swerve);
 
+        SwerveControllerCommand swerveControllerCommand2 =
+            new SwerveControllerCommand(
+                exampleTrajectory1,
+                s_Swerve::getPose,
+                Constants.Swerve.swerveKinematics,
+                new PIDController(Constants.AutoConstants.kPXController, 0, 0),
+                new PIDController(Constants.AutoConstants.kPYController, 0, 0),
+                thetaController,
+                s_Swerve::setModuleStates,
+                s_Swerve);
+
+        WaitCommand wait = new WaitCommand(5);
 
         addCommands(
             new InstantCommand(() -> s_Swerve.resetOdometry(exampleTrajectory.getInitialPose())),
-            swerveControllerCommand
+            swerveControllerCommand,
+            wait,
+            swerveControllerCommand2
         );
+
     }
 }
