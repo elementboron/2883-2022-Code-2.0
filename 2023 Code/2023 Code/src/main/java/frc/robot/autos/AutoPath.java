@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.autos.Actions.WaitAction;
 
 public class AutoPath extends SequentialCommandGroup {
     public AutoPath(Swerve s_Swerve){
@@ -67,9 +68,8 @@ public class AutoPath extends SequentialCommandGroup {
 
         addCommands(
             new InstantCommand(() -> s_Swerve.resetOdometry(exampleTrajectory.getInitialPose())),
-            swerveControllerCommand,
-            wait,
-            swerveControllerCommand2
+            new InstantCommand((() -> s_Swerve.zeroGyro())),
+            swerveControllerCommand
         );
 
     }
