@@ -29,9 +29,16 @@ public class RobotContainer {
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton slowDown = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
+
+    // Driving Control //
+    public static final double desiredSpeed = 0.8;
+    public static double speedController = desiredSpeed;
+    public static double turnController = speedController*0.7;
+
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -40,9 +47,9 @@ public class RobotContainer {
         s_Swerve.setDefaultCommand(
             new TeleopSwerve(
                 s_Swerve, 
-                () -> -driver.getRawAxis(translationAxis), 
-                () -> -driver.getRawAxis(strafeAxis), 
-                () -> -driver.getRawAxis(rotationAxis), 
+                () -> speedController*Math.pow(-driver.getRawAxis(translationAxis), 3), 
+                () -> speedController*Math.pow(-driver.getRawAxis(strafeAxis), 3), 
+                () -> turnController*Math.pow(-driver.getRawAxis(rotationAxis), 3), 
                 () -> robotCentric.getAsBoolean()
             )
         );
@@ -58,6 +65,9 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        slowDown.onTrue(new SlowDown(s_Swerve));
+        slowDown.onFalse(new RegularSpeed(s_Swerve));
+
     }
 
     /**
