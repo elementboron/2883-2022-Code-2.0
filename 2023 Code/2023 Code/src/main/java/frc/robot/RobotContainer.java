@@ -36,7 +36,7 @@ public class RobotContainer {
     // Driving Control //
     public static final double desiredSpeed = 0.8;
     public static double speedController = desiredSpeed;
-    public static double turnController = speedController*0.7;
+    public static double turnController = speedController*0.8;
 
 
 
@@ -48,7 +48,7 @@ public class RobotContainer {
                 s_Swerve, 
                 () -> speedController*Math.pow(-driver.getRawAxis(translationAxis), 3), 
                 () -> speedController*Math.pow(-driver.getRawAxis(strafeAxis), 3), 
-                () -> turnController*Math.pow(-driver.getRawAxis(rotationAxis), 3), 
+                () -> turnController*Math.pow(-driver.getRawAxis(rotationAxis), 3) * -1, 
                 () -> robotCentric.getAsBoolean()
             )
         );
