@@ -37,12 +37,12 @@ public class DriveToAprilTag extends SequentialCommandGroup {
         addCommands(
             new InstantCommand(() -> s_Swerve.resetOdometry(trajectoryInterior.getInitialPose())),
             new InstantCommand(() -> s_Swerve.zeroGyro()),
-            InteriorCommand,
+            InteriorCommand
            // rotboy,
-            new InstantCommand(() -> GenerateCurrentTrajectory()),
+           /*  new InstantCommand(() -> GenerateCurrentTrajectory()),
             new InstantCommand(() -> s_Swerve.resetOdometry(trajectoryApril.getInitialPose())),
             new InstantCommand(() -> s_Swerve.zeroGyro()),
-            AprilCommand
+            AprilCommand**/
 
 
         );
@@ -76,7 +76,7 @@ public class DriveToAprilTag extends SequentialCommandGroup {
             // Pass through these two interior waypoints, making an 's' curve path
             List.of(new Translation2d(-waypoinRightExteriorDistance[0], -waypoinRightExteriorDistance[1])),
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(-waypoinRightInteriorDistance[0],-waypoinRightInteriorDistance[1], new Rotation2d(0)),
+            new Pose2d(-distancePose[0],-distancePose[1], new Rotation2d(0)),
             config);
 
             trajectoryApril =
