@@ -38,8 +38,9 @@ public class LimelightReader {
     
     
 
-    public static final double[] April3Pose = new double[] {6.5,0.4,0.0};
-
+    public static final double[] April3Pose = new double[] {6.2,0.6,0.0};
+    public static final double[] DockWayPointRightRedInterior = new double[] {5.22,0.66,0.0};
+    public static final double[] DockWayPointRightRedExterior = new double[] {3.1,0.3,0.0};
     public void UpdateLimeCam()
     {
         NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
