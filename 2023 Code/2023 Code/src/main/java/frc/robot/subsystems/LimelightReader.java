@@ -95,7 +95,7 @@ public class LimelightReader {
     }
 
     public static double[] GetDistanceVector(double x1, double y1, double rotz1, double x2, double y2, double rotz2){
-        return new double[] {x2-x1, y2-y1, rotz2-rotz1};
+        return new double[] {x1-x2, y1-y2, rotz1-rotz2};
     }
 
     public class BotPoseInfoHolder

@@ -54,8 +54,8 @@ public class DriveToAprilTag extends SequentialCommandGroup {
 
         TrajectoryConfig config =
             new TrajectoryConfig(
-                    Constants.AutoConstants.kMaxSpeedMetersPerSecond/2,
-                    Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+                    Constants.AutoConstants.kMaxSpeedMetersPerSecond/3,
+                    Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared/2)
                 .setKinematics(Constants.Swerve.swerveKinematics);
 
         double[] currentBotPose = LimelightReader.Instance().botPose.getDoubleArray(new double[3]);
@@ -64,15 +64,15 @@ public class DriveToAprilTag extends SequentialCommandGroup {
             currentBotPose = LimelightReader.Instance().botPose.getDoubleArray(currentBotPose);
         }
 
-        double[] distancePose = LimelightReader.GetDistanceVector(currentBotPose[0], currentBotPose[1], 0, LimelightReader.April3Pose[0], LimelightReader.April3Pose[1], 0);
-        double[] waypoinRightInteriorDistance = LimelightReader.GetDistanceVector(currentBotPose[0], currentBotPose[1], 0, LimelightReader.DockWayPointRightRedInterior[0], LimelightReader.DockWayPointRightRedInterior[1], 0);
-        double[] waypoinRightExteriorDistance = LimelightReader.GetDistanceVector(currentBotPose[0], currentBotPose[1], 0, LimelightReader.DockWayPointRightRedExterior[0], LimelightReader.DockWayPointRightRedExterior[1], 0);       
+        double[] distancePose = LimelightReader.GetDistanceVector(LimelightReader.April3Pose[0], LimelightReader.April3Pose[1], 0, currentBotPose[0], currentBotPose[1], 0);
+        double[] waypoinRightInteriorDistance = LimelightReader.GetDistanceVector(LimelightReader.DockWayPointRightRedInterior[0], LimelightReader.DockWayPointRightRedInterior[1], 0, currentBotPose[0], currentBotPose[1], 0);
+        double[] waypoinRightExteriorDistance = LimelightReader.GetDistanceVector(LimelightReader.DockWayPointRightRedExterior[0], LimelightReader.DockWayPointRightRedExterior[1], 0, currentBotPose[0], currentBotPose[1], 0);       
        
 
         trajectoryInterior =
         TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
-            new Pose2d(0, 0, new Rotation2d(currentBotPose[2]) ),
+            new Pose2d(0, 0, new Rotation2d(0) ),
             // Pass through these two interior waypoints, making an 's' curve path
             List.of(new Translation2d(-waypoinRightExteriorDistance[0], -waypoinRightExteriorDistance[1])),
             // End 3 meters straight ahead of where we started, facing forward
