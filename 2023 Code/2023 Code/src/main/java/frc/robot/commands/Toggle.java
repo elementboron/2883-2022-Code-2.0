@@ -13,21 +13,19 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
 
-public class ExtendArm extends CommandBase
+public class Toggle extends CommandBase
 {
     private ArmExtensionMotor s_Arm = new ArmExtensionMotor();
-    private DoubleSupplier extensionSpeed;
-    private DoubleSupplier rotationSpeed;
+    
 
-    public ExtendArm(ArmExtensionMotor subsystem, DoubleSupplier extension, DoubleSupplier rotation)
+    public Toggle(ArmExtensionMotor subsystem)
     {
         s_Arm = subsystem;
-        this.extensionSpeed = extension;
-        this.rotationSpeed = rotation;
         
         addRequirements(s_Arm);
     }
@@ -38,10 +36,8 @@ public class ExtendArm extends CommandBase
         
     }
     @Override
-    public void execute() 
-    {  
-       s_Arm.Spin(extensionSpeed.getAsDouble(), new WPI_TalonFX(18));
-       s_Arm.Spin(Math.pow(rotationSpeed.getAsDouble(),3)/2.3, new WPI_TalonFX(19));
+    public void execute(){
+
     }
 
     @Override

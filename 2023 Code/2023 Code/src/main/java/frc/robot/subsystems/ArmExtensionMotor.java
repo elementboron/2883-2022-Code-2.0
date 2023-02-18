@@ -19,78 +19,85 @@ public class ArmExtensionMotor extends SubsystemBase
 {
   //public final CANSparkMax motor1 = new CANSparkMax(11, MotorType.kBrushless);
   //public final WPI_TalonFX m_indexend = new WPI_TalonFX(8);
+  WPI_TalonFX motorExtend = new WPI_TalonFX(18);
+  WPI_TalonFX motorRotate = new WPI_TalonFX(19);
   WPI_TalonFX motor;
 
-  public void Initialize(WPI_TalonFX motor)  {
+  /*public void Initialize(WPI_TalonFX motor)  {
     this.motor = motor;
-  }
+  }**/
  
-  public void Spin(double speed) 
+  public void Spin(double speed, WPI_TalonFX motor1) 
   {
-    motor.set(speed);
+    motor1.set(speed);
   }
-
-  /*public void SpinIn(double speed, double distance, boolean tween)
+  public void SpinIn(WPI_TalonFX motor1, double speed, double distance, boolean tween)
   {
-    SpinForInternalIn(speed, distance, tween);
+    SpinForInternalIn(motor1, speed, distance, tween);
   }
   
-  public void SpinOut(double speed, double distance, boolean tween)
+  public void SpinOut(WPI_TalonFX motor1, double speed, double distance, boolean tween)
   {
-    SpinForInternalOut(speed, distance, tween);
+    SpinForInternalOut(motor1, speed, distance, tween);
   }
 
-  private void SpinForInternalOut(double speed, double distance, boolean tween)
+  private void SpinForInternalOut(WPI_TalonFX motor1, double speed, double rotations, boolean tween)
   {
-    if(encoder.getPosition() < distance )
+    double distance = rotations*2048;
+    if(motor1.getSelectedSensorPosition()*2048 < distance )
     {
-        if(encoder.getPosition() <= distance/2 || !tween)
+        if(motor1.getSelectedSensorPosition()*2048 <= distance/2 || !tween)
         {
-            motor.set(speed);
+            motor1.set(speed);
         } else
         {
             double baseSpeed = 0.05;
             double speedMinusBS = speed-baseSpeed;
-            double tweenSpeed = CommonMethodExtensions.tweenerReverse(speedMinusBS, (distance/2), (encoder.getPosition() - distance/2));
-            motor.set(tweenSpeed+baseSpeed);
+            double tweenSpeed = CommonMethodExtensions.tweenerReverse(speedMinusBS, (distance/2), (motor1.getSelectedSensorPosition()*2048 - distance/2));
+            motor1.set(tweenSpeed+baseSpeed);
         }
     //Out = false;
     } else 
     {
-        motor.set(0);
+        motor1.set(0);
         //Out = true;
     }
   }
 
-  private void SpinForInternalIn(double speed, double distance, boolean tween)
+  private void SpinForInternalIn(WPI_TalonFX motor1, double speed, double rotations, boolean tween)
   {
-    if(encoder.getPosition() > 0 )
+    double distance = rotations*2048;
+    if(motor1.getSelectedSensorPosition()*2048 > 0 )
     {
-        if(encoder.getPosition() >= distance/2 || !tween)
+        if(motor1.getSelectedSensorPosition()*2048 >= distance/2 || !tween)
         {
-            motor.set(-speed);
+            motor1.set(-speed);
         } else
         {
             double baseSpeed = 0.02;
             double speedMinusBS = speed-baseSpeed;
-            double tweenSpeed = CommonMethodExtensions.tweenerReverse(speedMinusBS, (distance/2), (distance/2 - encoder.getPosition()));
+            double tweenSpeed = CommonMethodExtensions.tweenerReverse(speedMinusBS, (distance/2), (distance/2 - motor1.getSelectedSensorPosition()*2048));
             double actualSpeed = tweenSpeed+baseSpeed;
             motor.set(-actualSpeed);
         }
       //Out = true;
     } else 
     {
-        motor.set(0);
+        motor1.set(0);
         //Out = false;
     }
   }
-**/
+
   public void UpdateSmartDashNums()
   {
     //SmartDashboard.putNumber("Encoder Position[" + motor.getDeviceID() + "]", encoder.getPosition());
     //SmartDashboard.putNumber("Encoder Velocity[" + motor.getDeviceID() + "]", encoder.getVelocity());
-    SmartDashboard.putNumber("Motor Temperature[" + motor.getDeviceID() + "]", motor.getTemperature());
-    SmartDashboard.putNumber("Motor Current[" + motor.getDeviceID() + "]", motor.getSupplyCurrent());
+    SmartDashboard.putNumber("ExtendMotor Temperature:", motorExtend.getTemperature());
+    SmartDashboard.putNumber("ExtendMotor Current:", motorExtend.getSupplyCurrent());
+    SmartDashboard.putNumber("RotateMotor Temperature:", motorRotate.getTemperature());
+    SmartDashboard.putNumber("RotateMotor Current:", motorRotate.getSupplyCurrent());
+    SmartDashboard.putNumber("RotateMotor Rotations:",motorRotate.getSelectedSensorPosition()/2048);
+    SmartDashboard.putNumber("ExtendMotor Rotations:", motorExtend.getSelectedSensorPosition()/2048);
     //SmartDashboard.putNumber("Max Distance[" + motor.getDeviceID() + "]", maxDistance);
   }
   

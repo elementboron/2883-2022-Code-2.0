@@ -14,10 +14,12 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.ArmExtensionMotor;
 
 /**
@@ -35,6 +37,12 @@ public class Robot extends TimedRobot {
 
   private final ArmExtensionMotor s_Arm = new ArmExtensionMotor();
 
+  public boolean toggle = false;
+  boolean lastFramespinOutValue = false;
+
+  private Joystick m_stick = new Joystick(0);
+  JoystickButton spinOutButton = new JoystickButton(m_stick, 2);
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -43,7 +51,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     
     ctreConfigs = new CTREConfigs();
-    s_Arm.Initialize(new WPI_TalonFX(18));
+    //s_Arm.Initialize(new WPI_TalonFX(18));
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -88,6 +96,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("LimelightY", y);
     SmartDashboard.putNumber("LimelightArea", area);
     SmartDashboard.putNumber("Estimated Distance in Inches", distanceFromLimelightToGoalInches);
+    s_Arm.UpdateSmartDashNums();
 
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
@@ -131,7 +140,27 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+/*
+    boolean pressedThisFrame = spinOutButton.getAsBoolean();
+
+    if(lastFramespinOutValue != pressedThisFrame && pressedThisFrame)
+    {
+      toggle = !toggle;
+    }
+    lastFramespinOutValue = pressedThisFrame;
+
+   if(toggle)
+    {
+      s_Arm.SpinIn(new WPI_TalonFX(18), 0.2, 10, true);
+    }
+    else
+    {
+      s_Arm.SpinOut(new WPI_TalonFX(18), 0.2, 10, true);
+    }
+  **/
+
+  }
 
   @Override
   public void testInit() {

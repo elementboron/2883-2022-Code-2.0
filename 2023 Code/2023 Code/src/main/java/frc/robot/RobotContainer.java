@@ -25,6 +25,7 @@ public class RobotContainer {
     private final int translationAxis = XboxController.Axis.kLeftY.value;
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
     private final int rotationAxis = XboxController.Axis.kRightX.value;
+    private final int armRotationAxis = XboxController.Axis.kRightY.value;
     private final int extendAxis = XboxController.Axis.kLeftTrigger.value;
     private final int retractAxis = XboxController.Axis.kRightTrigger.value;
 
@@ -33,6 +34,7 @@ public class RobotContainer {
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     private final JoystickButton slowDown = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton extendArm = new JoystickButton(driver, XboxController.Button.kA.value);
+    private final JoystickButton retractArm = new JoystickButton(driver, XboxController.Button.kB.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -61,11 +63,11 @@ public class RobotContainer {
         s_Arm.setDefaultCommand(      
             new ExtendArm(
                 s_Arm,
-                () -> driver2.getRawAxis(translationAxis)
+                () -> driver2.getRawAxis(translationAxis),
+                () -> driver2.getRawAxis(armRotationAxis)*-1
                 
             )
         );
-
 
         configureButtonBindings();
 	}
@@ -81,6 +83,8 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         slowDown.onTrue(new SlowDown(s_Swerve));
         slowDown.onFalse(new RegularSpeed(s_Swerve));
+        //extendArm.onTrue(new InstantCommand(() -> new ExtendArmPress(s_Arm, 5, 0.1)));
+        //retractArm.onTrue(new InstantCommand(() -> new RetractArmPress(s_Arm, 5, 0.1)));
     }
 
     /**

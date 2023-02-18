@@ -17,17 +17,15 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
 
-public class ExtendArm extends CommandBase
+public class RotateArm extends CommandBase
 {
     private ArmExtensionMotor s_Arm = new ArmExtensionMotor();
     private DoubleSupplier extensionSpeed;
-    private DoubleSupplier rotationSpeed;
 
-    public ExtendArm(ArmExtensionMotor subsystem, DoubleSupplier extension, DoubleSupplier rotation)
+    public RotateArm(ArmExtensionMotor subsystem, DoubleSupplier extension)
     {
         s_Arm = subsystem;
         this.extensionSpeed = extension;
-        this.rotationSpeed = rotation;
         
         addRequirements(s_Arm);
     }
@@ -40,8 +38,7 @@ public class ExtendArm extends CommandBase
     @Override
     public void execute() 
     {  
-       s_Arm.Spin(extensionSpeed.getAsDouble(), new WPI_TalonFX(18));
-       s_Arm.Spin(Math.pow(rotationSpeed.getAsDouble(),3)/2.3, new WPI_TalonFX(19));
+       s_Arm.Spin(extensionSpeed.getAsDouble()/5, new WPI_TalonFX(19));
     }
 
     @Override
