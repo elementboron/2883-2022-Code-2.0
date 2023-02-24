@@ -8,6 +8,10 @@
 package frc.robot.subsystems;
 
 
+import java.util.function.DoubleSupplier;
+
+import javax.sql.rowset.WebRowSet;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -18,25 +22,46 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.CommonMethodExtensions;
 import frc.robot.Constants;
 //import frc.robot.Commands.SpinNeo550;
+import frc.robot.Robot;
 
-public class GripperWheelsSubsystem extends SubsystemBase 
+public class GripperWheels extends SubsystemBase 
 {
   //public final CANSparkMax motor1 = new CANSparkMax(11, MotorType.kBrushless);
   //public final WPI_TalonFX m_indexend = new WPI_TalonFX(8);
-  private final CANSparkMax motor1 = new CANSparkMax(7, MotorType.kBrushless);
+  //WPI_TalonFX motorExtend = new WPI_TalonFX(Constants.Swerve.extendMotorID);
+  CANSparkMax wheelMotor = Robot.wheelsMotor;
+  RelativeEncoder encoder = wheelMotor.getEncoder();
 
   /*public void Initialize(WPI_TalonFX motor)  {
     this.motor = motor;
   }**/
  
-  public void SpinWheels(double speed) 
+  public void TeleOp(boolean spinIn, boolean spinOut)
   {
-    motor1.set(speed);
+
+    if(spinIn && spinOut)
+    {
+      wheelMotor.set(0);
+    } else if (spinIn)
+    {
+      wheelMotor.set(-0.2);
+    } else if (spinOut)
+    {
+      wheelMotor.set(0.2);
+    } else if (!spinIn && !spinOut)
+    {
+      wheelMotor.set(0);
+    }
   }
-  
+
+  public void Drive(DoubleSupplier positiveRotation, DoubleSupplier negativeRotation)
+  {
+    wheelMotor.set((positiveRotation.getAsDouble()-negativeRotation.getAsDouble())/2);
+  }
+
   public void Stop()
   {
-    motor1.set(0);
+    wheelMotor.set(0);
   }
 
   public boolean isFinished() 

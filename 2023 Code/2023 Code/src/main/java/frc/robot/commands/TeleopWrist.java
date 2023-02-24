@@ -14,18 +14,18 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
 
-public class TeleopArm extends CommandBase
+public class TeleopWrist extends CommandBase
 {
-    private final RotateArmMotor s_Arm;
-    private final DoubleSupplier armRotation;
+    private final WristMotor s_Wrist;
+    private final DoubleSupplier wristRotation;
   
 
-    public TeleopArm(RotateArmMotor subsystem, DoubleSupplier armRotation)
+    public TeleopWrist(WristMotor subsystem, DoubleSupplier wristRotation)
     {
-        s_Arm = subsystem;
-        this.armRotation = armRotation;
+        s_Wrist = subsystem;
+        this.wristRotation = wristRotation;
         
-        addRequirements(s_Arm);
+        addRequirements(s_Wrist);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class TeleopArm extends CommandBase
     @Override
     public void execute() 
     {  
-        s_Arm.TeleOp(armRotation);
+        s_Wrist.TeleOpWrist(wristRotation);
      }
 
     @Override

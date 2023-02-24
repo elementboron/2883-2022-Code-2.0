@@ -24,39 +24,76 @@ import frc.robot.Constants;
 //import frc.robot.Commands.SpinNeo550;
 import frc.robot.Robot;
 
-public class GripperWheels extends SubsystemBase 
+public class WristMotor extends SubsystemBase 
 {
   //public final CANSparkMax motor1 = new CANSparkMax(11, MotorType.kBrushless);
   //public final WPI_TalonFX m_indexend = new WPI_TalonFX(8);
   //WPI_TalonFX motorExtend = new WPI_TalonFX(Constants.Swerve.extendMotorID);
-  CANSparkMax wheelMotor = Robot.wheelsMotor;
-  RelativeEncoder encoder = wheelMotor.getEncoder();
+  CANSparkMax wristMotor = Robot.wristMotor;
+  RelativeEncoder encoder = wristMotor.getEncoder();
+  
+  WPI_TalonFX motor;
 
   /*public void Initialize(WPI_TalonFX motor)  {
     this.motor = motor;
   }**/
  
-  public void TeleOp(boolean spinIn, boolean spinOut)
+  public void TeleOpWrist(DoubleSupplier wristRotation) 
   {
+    wristMotor.set(wristRotation.getAsDouble());
 
-    if(spinIn && spinOut)
+  }
+
+  public void setWristRotation(double speed, double desiredPosition)
+  {
+    if(encoder.getPosition()>desiredPosition){
+
+      InternalSpinWristReverse(speed, desiredPosition);
+
+    } else if (encoder.getPosition()<desiredPosition){
+
+      InternalSpinWristForward(speed, desiredPosition);
+
+    } else if (encoder.getPosition() == desiredPosition){
+
+      Stop();
+
+    }
+
+  }
+
+  public void InternalSpinWristForward(double speed, double distance)
+  {
+    if(encoder.getPosition()<distance)
     {
-      wheelMotor.set(0);
-    } else if (spinIn)
-    {
-      wheelMotor.set(-0.2);
-    } else if (spinOut)
-    {
-      wheelMotor.set(0.2);
-    } else if (!spinIn && !spinOut)
-    {
-      wheelMotor.set(0);
+      wristMotor.set(speed);
+    } else {
+      wristMotor.set(0);
     }
   }
 
+  public void InternalSpinWristReverse(double speed, double distance)
+  {
+    if(encoder.getPosition()<distance)
+    {
+      wristMotor.set(-speed);
+    } else {
+      wristMotor.set(0);
+    }
+  }
+
+  public void UpdateSmartDashNums()
+  {
+
+    SmartDashboard.putNumber("WristMotor Temperature:", wristMotor.getMotorTemperature());
+    SmartDashboard.putNumber("WristMotor Rotations:", encoder.getPosition());
+
+  }
+  
+
   public void Stop()
   {
-    wheelMotor.set(0);
+    wristMotor.set(0);
   }
 
   public boolean isFinished() 

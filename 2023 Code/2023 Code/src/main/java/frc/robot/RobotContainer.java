@@ -41,7 +41,8 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final RotateArmMotor s_Arm = new RotateArmMotor();
-    //private final GripperWheels s_Wheels = new GripperWheels();
+    private final WristMotor s_Wrist = new WristMotor();
+    private final GripperWheels s_Wheels = new GripperWheels();
     //private final Pneumatics s_Pneumatics = new Pneumatics();
     //private final GripperWheelsSubsystem s_Wheels = new GripperWheelsSubsystem();
 
@@ -68,23 +69,24 @@ public class RobotContainer {
         s_Arm.setDefaultCommand(      
             new TeleopArm(
                 s_Arm,
-                () -> driver2.getRawAxis(translationAxis)*-1,
-                () -> -driver2.getRawAxis(wristRotationAxis),
-                jointMovement.getAsBoolean()
-                
+                () -> driver2.getRawAxis(translationAxis)*-1
             )
         );
 
-        
-
-
-
-
-        /*s_Wheels.setDefaultCommand(
-            new ManualSpinGripperWheels(s_Wheels, 
-                () -> driver2.getRawAxis(rotationAxis)
+        s_Wrist.setDefaultCommand(
+            new TeleopWrist(
+                s_Wrist,
+                () -> driver2.getRawAxis(wristRotationAxis)*-1
             )
-        );**/
+        );
+
+        s_Wheels.setDefaultCommand(
+            new TeleopWheels(
+                s_Wheels,
+                () -> driver2.getRawAxis(extendAxis),
+                () -> driver2.getRawAxis(retractAxis)
+            )
+        );
 
         configureButtonBindings();
 	}
@@ -100,7 +102,7 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         slowDown.onTrue(new SlowDown(s_Swerve));
         slowDown.onFalse(new RegularSpeed(s_Swerve));
-        wristToPickup.onTrue(new WristAuto(s_Arm));
+        //wristToPickup.onTrue(new WristAuto(s_Arm));
         //activateGripper.onTrue(new ActivateGripper(s_Wheels));
 
 

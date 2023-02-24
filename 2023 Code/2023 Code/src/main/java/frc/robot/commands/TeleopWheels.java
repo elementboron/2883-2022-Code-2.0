@@ -14,16 +14,20 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
 
-public class WristAuto extends CommandBase
+public class TeleopWheels extends CommandBase
 {
-    private final RotateArmMotor s_Arm;
+    private final GripperWheels s_Wheels;
+    private final DoubleSupplier wheelSpeedPositive;
+    private final DoubleSupplier wheelSpeedNegative;
   
 
-    public WristAuto(RotateArmMotor subsystem)
+    public TeleopWheels(GripperWheels subsystem, DoubleSupplier wheelSpeedPositive, DoubleSupplier wheelSpeedNegative)
     {
-        s_Arm = subsystem;
+        s_Wheels = subsystem;
+        this.wheelSpeedPositive = wheelSpeedPositive;
+        this.wheelSpeedNegative = wheelSpeedNegative;
         
-        addRequirements(s_Arm);
+        addRequirements(s_Wheels);
     }
 
     @Override
@@ -34,7 +38,7 @@ public class WristAuto extends CommandBase
     @Override
     public void execute() 
     {  
-        s_Arm.setWristRotation(0.1, 5);
+        s_Wheels.Drive(wheelSpeedPositive, wheelSpeedNegative);
      }
 
     @Override
