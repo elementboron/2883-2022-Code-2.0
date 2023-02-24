@@ -14,8 +14,15 @@ public final class Constants {
     public static final double stickDeadband = 0.1;
 
     public static final class Swerve {
-        public static final int pigeonID = 31;
-        public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
+            public static final int pigeonID = 31;
+            public static final int extendMotorID = 18;
+            public static final int rotateArmID = 19;
+            public static final int gripperSolenoidID = 0;
+            public static final int wristRotationID = 5;
+            public static final int wheelsMotorID = 7;
+            public static final int wheelMotorID = 9;
+            public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
+
 
         public static final COTSFalconSwerveConstants chosenModule =  //TODO: This must be tuned to specific robot
             COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L1);

@@ -9,23 +9,19 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
-import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
 
-public class RotateArm extends CommandBase
+public class WristAuto extends CommandBase
 {
-    private ArmExtensionMotor s_Arm = new ArmExtensionMotor();
-    private DoubleSupplier extensionSpeed;
+    private final RotateArmMotor s_Arm;
+  
 
-    public RotateArm(ArmExtensionMotor subsystem, DoubleSupplier extension)
+    public WristAuto(RotateArmMotor subsystem)
     {
         s_Arm = subsystem;
-        this.extensionSpeed = extension;
         
         addRequirements(s_Arm);
     }
@@ -38,8 +34,8 @@ public class RotateArm extends CommandBase
     @Override
     public void execute() 
     {  
-       s_Arm.Spin(extensionSpeed.getAsDouble()/5, new WPI_TalonFX(19));
-    }
+        s_Arm.setWristRotation(0.1, 5);
+     }
 
     @Override
     public boolean isFinished() 

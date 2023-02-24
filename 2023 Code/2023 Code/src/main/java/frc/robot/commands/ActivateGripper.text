@@ -12,24 +12,24 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
 
-public class ExtendArmPress extends CommandBase
+public class ActivateGripper extends CommandBase
 {
-    private ArmExtensionMotor s_Arm = new ArmExtensionMotor();
-    private double extensionDistance;
-    private double extensionSpeed;
+    private Pneumatics s_Pneumatics = new Pneumatics();
 
-    public ExtendArmPress(ArmExtensionMotor subsystem, double extensionDistance, double extensionSpeed)
+    public ActivateGripper(Pneumatics subsystem)
     {
-        s_Arm = subsystem;
-        this.extensionSpeed = extensionDistance;
-        this.extensionSpeed = extensionSpeed;
+        s_Pneumatics = subsystem;
         
-        addRequirements(s_Arm);
+        addRequirements(s_Pneumatics);
     }
 
     @Override
@@ -40,7 +40,8 @@ public class ExtendArmPress extends CommandBase
     @Override
     public void execute() 
     {  
-       s_Arm.SpinOut(new WPI_TalonFX(18), extensionSpeed, extensionDistance, true);
+       s_Pneumatics.ActivateGrippers();
+
     }
 
     @Override

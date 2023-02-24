@@ -17,17 +17,15 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
 
-public class RetractArmPress extends CommandBase
+public class ManualSpinGripperWheels extends CommandBase
 {
-    private ArmExtensionMotor s_Arm = new ArmExtensionMotor();
-    private double extensionDistance;
-    private double extensionSpeed;
+    private GripperWheelsSubsystem s_Arm = new GripperWheelsSubsystem();
+    private DoubleSupplier rotationSpeed;
 
-    public RetractArmPress(ArmExtensionMotor subsystem, double extensionDistance, double extensionSpeed)
+    public ManualSpinGripperWheels(GripperWheelsSubsystem subsystem, DoubleSupplier rotation)
     {
         s_Arm = subsystem;
-        this.extensionSpeed = extensionDistance;
-        this.extensionSpeed = extensionSpeed;
+        this.rotationSpeed = rotation;
         
         addRequirements(s_Arm);
     }
@@ -40,7 +38,7 @@ public class RetractArmPress extends CommandBase
     @Override
     public void execute() 
     {  
-       s_Arm.SpinIn(new WPI_TalonFX(18), extensionSpeed, extensionDistance, true);
+       s_Arm.SpinWheels(rotationSpeed.getAsDouble());
     }
 
     @Override

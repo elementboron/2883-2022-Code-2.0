@@ -25,7 +25,7 @@ public class RobotContainer {
     private final int translationAxis = XboxController.Axis.kLeftY.value;
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
     private final int rotationAxis = XboxController.Axis.kRightX.value;
-    private final int armRotationAxis = XboxController.Axis.kRightY.value;
+    private final int wristRotationAxis = XboxController.Axis.kRightY.value;
     private final int extendAxis = XboxController.Axis.kLeftTrigger.value;
     private final int retractAxis = XboxController.Axis.kRightTrigger.value;
 
@@ -33,12 +33,17 @@ public class RobotContainer {
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     private final JoystickButton slowDown = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-    private final JoystickButton extendArm = new JoystickButton(driver, XboxController.Button.kA.value);
-    private final JoystickButton retractArm = new JoystickButton(driver, XboxController.Button.kB.value);
+    private final JoystickButton jointMovement = new JoystickButton(driver2, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton wristToPickup = new JoystickButton(driver2, XboxController.Button.kY.value);
+
+    
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
-    private final ArmExtensionMotor s_Arm = new ArmExtensionMotor();
+    private final RotateArmMotor s_Arm = new RotateArmMotor();
+    //private final GripperWheels s_Wheels = new GripperWheels();
+    //private final Pneumatics s_Pneumatics = new Pneumatics();
+    //private final GripperWheelsSubsystem s_Wheels = new GripperWheelsSubsystem();
 
     // Driving Control //
     public static final double desiredSpeed = 0.8;
@@ -61,13 +66,25 @@ public class RobotContainer {
         );
 
         s_Arm.setDefaultCommand(      
-            new ExtendArm(
+            new TeleopArm(
                 s_Arm,
-                () -> driver2.getRawAxis(translationAxis),
-                () -> driver2.getRawAxis(armRotationAxis)*-1
+                () -> driver2.getRawAxis(translationAxis)*-1,
+                () -> -driver2.getRawAxis(wristRotationAxis),
+                jointMovement.getAsBoolean()
                 
             )
         );
+
+        
+
+
+
+
+        /*s_Wheels.setDefaultCommand(
+            new ManualSpinGripperWheels(s_Wheels, 
+                () -> driver2.getRawAxis(rotationAxis)
+            )
+        );**/
 
         configureButtonBindings();
 	}
@@ -83,6 +100,10 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         slowDown.onTrue(new SlowDown(s_Swerve));
         slowDown.onFalse(new RegularSpeed(s_Swerve));
+        wristToPickup.onTrue(new WristAuto(s_Arm));
+        //activateGripper.onTrue(new ActivateGripper(s_Wheels));
+
+
         //extendArm.onTrue(new InstantCommand(() -> new ExtendArmPress(s_Arm, 5, 0.1)));
         //retractArm.onTrue(new InstantCommand(() -> new RetractArmPress(s_Arm, 5, 0.1)));
     }

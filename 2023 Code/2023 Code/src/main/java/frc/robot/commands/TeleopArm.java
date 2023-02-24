@@ -9,25 +9,24 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
-import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
 
-public class ExtendArm extends CommandBase
+public class TeleopArm extends CommandBase
 {
-    private ArmExtensionMotor s_Arm = new ArmExtensionMotor();
-    private DoubleSupplier extensionSpeed;
-    private DoubleSupplier rotationSpeed;
+    private final RotateArmMotor s_Arm;
+    private final DoubleSupplier armRotation;
+    private final DoubleSupplier wristRotation;
+    private final boolean jointMovement;    
 
-    public ExtendArm(ArmExtensionMotor subsystem, DoubleSupplier extension, DoubleSupplier rotation)
+    public TeleopArm(RotateArmMotor subsystem, DoubleSupplier armRotation, DoubleSupplier wristRotation, boolean jointMovement)
     {
         s_Arm = subsystem;
-        this.extensionSpeed = extension;
-        this.rotationSpeed = rotation;
+        this.armRotation = armRotation;
+        this.wristRotation = wristRotation;
+        this.jointMovement = jointMovement;
         
         addRequirements(s_Arm);
     }
@@ -40,9 +39,8 @@ public class ExtendArm extends CommandBase
     @Override
     public void execute() 
     {  
-       s_Arm.Spin(extensionSpeed.getAsDouble(), new WPI_TalonFX(18));
-       s_Arm.Spin(Math.pow(rotationSpeed.getAsDouble(),3)/2.3, new WPI_TalonFX(19));
-    }
+        s_Arm.TeleOp(armRotation, wristRotation, jointMovement);
+     }
 
     @Override
     public boolean isFinished() 
