@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import frc.robot.autos.TrueAuto;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -47,7 +47,7 @@ public class RobotContainer {
     //private final GripperWheelsSubsystem s_Wheels = new GripperWheelsSubsystem();
 
     // Driving Control //
-    public static final double desiredSpeed = 0.8;
+    public static final double desiredSpeed = 0.5;
     public static double speedController = desiredSpeed;
     public static double turnController = speedController*0.8;
 
@@ -117,6 +117,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return nul
+        final Command auto = new TrueAuto(s_Swerve);
+        return auto;
     }
 }
