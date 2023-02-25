@@ -5,7 +5,9 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
@@ -100,7 +102,7 @@ public final class Constants {
             public static final int driveMotorID = 16;
             public static final int angleMotorID = 17;
             public static final int canCoderID = 23;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(4.3);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(5);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -141,10 +143,26 @@ public final class Constants {
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+        public static final double kSlowAccelerationMetersPerSecondSquared = 2.0;
     
         public static final double kPXController = 1;
         public static final double kPYController = 1;
         public static final double kPThetaController = 1;
+
+        public static TrajectoryConfig createConfig(double maxSpeed, double maxAccel, double startSpeed, double endSpeed) {
+            TrajectoryConfig config = new TrajectoryConfig(maxSpeed, maxAccel);
+            config.setKinematics(Constants.Swerve.swerveKinematics);
+            config.setStartVelocity(startSpeed);
+            config.setEndVelocity(endSpeed);
+            config.addConstraint(new CentripetalAccelerationConstraint(3.0));
+            return config;
+        }
+        public static final TrajectoryConfig defaultSpeedConfig =
+                new TrajectoryConfig(
+                        kMaxSpeedMetersPerSecond,
+                        kMaxAccelerationMetersPerSecondSquared)
+                        .setKinematics(Constants.Swerve.swerveKinematics);
+
     
         /* Constraint for the motion profilied robot angle controller */
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints =

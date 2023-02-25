@@ -61,7 +61,7 @@ public class RobotContainer {
                 s_Swerve, 
                 () -> speedController*Math.pow(-driver.getRawAxis(translationAxis), 3), 
                 () -> speedController*Math.pow(-driver.getRawAxis(strafeAxis), 3), 
-                () -> turnController*Math.pow(-driver.getRawAxis(rotationAxis), 3) * -1, 
+                () -> turnController*-1*Math.pow(-driver.getRawAxis(rotationAxis), 3) * -1, 
                 () -> robotCentric.getAsBoolean()
             )
         );
@@ -117,6 +117,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return null;
+        return nul
     }
 }
