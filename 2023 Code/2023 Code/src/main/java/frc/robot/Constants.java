@@ -20,7 +20,6 @@ public final class Constants {
             public static final int gripperSolenoidID = 0;
             public static final int wristRotationID = 5;
             public static final int wheelsMotorID = 7;
-            public static final int wheelMotorID = 9;
             public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
 

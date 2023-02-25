@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
   boolean lastFramespinOutValue = false;
 
   public static CANSparkMax wristMotor = new CANSparkMax(Constants.Swerve.wristRotationID, MotorType.kBrushless);
-  public static CANSparkMax wheelsMotor = new CANSparkMax(Constants.Swerve.wheelMotorID, MotorType.kBrushless);
+  public static CANSparkMax wheelsMotor = new CANSparkMax(Constants.Swerve.wheelsMotorID, MotorType.kBrushless);
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
