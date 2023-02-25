@@ -19,26 +19,18 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class TrueAuto extends SequentialCommandGroup {
-    public TrueAuto(Swerve s_Swerve){
+public class DriveForwardAuto extends SequentialCommandGroup {
+    public DriveForwardAuto(Swerve s_Swerve){
         TrajectoryConfig config =
             new TrajectoryConfig(
                     Constants.AutoConstants.kMaxSpeedMetersPerSecond/2,
-                    Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared/2)
+                    Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared/1.5)
                 .setKinematics(Constants.Swerve.swerveKinematics);
 
-        // An example trajectory to follow.  All units in meters.
-        Trajectory trajectoryToPickup =
-            TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(0, 0, new Rotation2d(0)),
-                // Pass through these two interior waypoints, making an 's' curve path
-                List.of(new Translation2d(1, 0)),
-                // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(5, 0, new Rotation2d(180)),
-                config);
+        
 
-        Trajectory trajectoryToPlace =
+        // An example trajectory to follow.  All units in meters.
+        /*Trajectory driveForward =
             TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 new Pose2d(0, 0, new Rotation2d(0)),
@@ -48,14 +40,24 @@ public class TrueAuto extends SequentialCommandGroup {
                 new Pose2d(2, 0, new Rotation2d(0)),
                 config);
 
+        Trajectory driveBackward =
+            TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                new Pose2d(0, 0, new Rotation2d(0)),
+                // Pass through these two interior waypoints, making an 's' curve path
+                List.of(new Translation2d(1, 0.5)),
+                // End 3 meters straight ahead of where we started, facing forward
+                new Pose2d(2, 0, new Rotation2d(0)),
+                config);
+
         var thetaController =
             new ProfiledPIDController(
                 Constants.AutoConstants.kPThetaController, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-        SwerveControllerCommand driveToPickup =
+        SwerveControllerCommand driveForwardCommand =
             new SwerveControllerCommand(
-                trajectoryToPickup,
+                driveForward,
                 s_Swerve::getPose,
                 Constants.Swerve.swerveKinematics,
                 new PIDController(Constants.AutoConstants.kPXController, 0, 0),
@@ -64,27 +66,23 @@ public class TrueAuto extends SequentialCommandGroup {
                 s_Swerve::setModuleStates,
                 s_Swerve);
 
-        SwerveControllerCommand driveToPlace =
-        new SwerveControllerCommand(
-            trajectoryToPickup,
-            s_Swerve::getPose,
-            Constants.Swerve.swerveKinematics,
-            new PIDController(Constants.AutoConstants.kPXController, 0, 0),
-            new PIDController(Constants.AutoConstants.kPYController, 0, 0),
-            thetaController,
-            s_Swerve::setModuleStates,
-            s_Swerve);
+        SwerveControllerCommand driveBackwardCommand =
+            new SwerveControllerCommand(
+                driveBackward,
+                s_Swerve::getPose,
+                Constants.Swerve.swerveKinematics,
+                new PIDController(Constants.AutoConstants.kPXController, 0, 0),
+                new PIDController(Constants.AutoConstants.kPYController, 0, 0),
+                thetaController,
+                s_Swerve::setModuleStates,
+                s_Swerve);**/
 
-        WaitCommand wait = new WaitCommand(5);
 
         addCommands(
-            new InstantCommand(() -> s_Swerve.resetOdometry(trajectoryToPickup.getInitialPose())),
-            new InstantCommand(() -> s_Swerve.OneEightyGyro()),
-            driveToPickup,
-            new StopRobotAutonomous(s_Swerve),
-            new InstantCommand(() -> s_Swerve.resetOdometry(trajectoryToPlace.getInitialPose())),
-            wait,
-            driveToPlace
+            // InstantCommand(() -> s_Swerve.resetOdometry(driveForward.getInitialPose())),
+            new InstantCommand(() -> s_Swerve.zeroGyro())
+            //driveForwardCommand
+            //driveBackwardCommand
         );
     }
 }
