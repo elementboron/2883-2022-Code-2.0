@@ -108,7 +108,7 @@ public class Swerve extends SubsystemBase {
         gyro.setYaw(0);
     }
 
-    public Command followTrajectoryCommand(frc.robot.subsystems.PathPlannerTrajectory traj, boolean isFirstPath) {
+    public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
         return new SequentialCommandGroup(
              new InstantCommand(() -> {
                // Reset odometry for the first path you run during auto
