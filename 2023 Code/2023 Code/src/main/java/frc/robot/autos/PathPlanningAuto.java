@@ -5,10 +5,11 @@ import frc.robot.commands.FollowTrajectory;
 //import frc.robot.autos.Actions.Action;
 //import frc.robot.autos.Actions.WaitAction;
 import frc.robot.commands.TeleopSwerve;
-import frc.robot.subsystems.Swerve;
 
 import java.util.List;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -36,7 +37,7 @@ public class PathPlanningAuto extends SequentialCommandGroup {
                     Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
                 .setKinematics(Constants.Swerve.swerveKinematics);
     
-    
+        PathPlannerTrajectory traj = PathPlanner.loadPath("TestPath", new PathConstraints(3, 1)); 
 
 
         addCommands(
