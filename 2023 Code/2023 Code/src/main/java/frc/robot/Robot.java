@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.RotateArmMotor;
 //import frc.robot.subsystems.GripperWheels;
 //import frc.robot.subsystems.Pneumatics;
+import frc.robot.subsystems.WristMotor;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -45,6 +46,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private final RotateArmMotor s_Arm = new RotateArmMotor();
+  private final WristMotor s_Wrist = new WristMotor();
   //private final Pneumatics s_Pneumatics = new Pneumatics();
   //public final Solenoid gripper = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Swerve.gripperSolenoidID);
 
@@ -64,7 +66,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    
+    s_Arm.ShoulderSoftLimits();
+    s_Wrist.SetWristSoftLimits();
     ctreConfigs = new CTREConfigs();
     //s_Arm.Initialize(new WPI_TalonFX(18));
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
@@ -112,6 +115,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("LimelightArea", area);
     SmartDashboard.putNumber("Estimated Distance in Inches", distanceFromLimelightToGoalInches);
     s_Arm.UpdateSmartDashNums();
+    s_Wrist.UpdateSmartDashNums();
 
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,

@@ -33,9 +33,10 @@ public class RobotContainer {
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     private final JoystickButton slowDown = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-    private final JoystickButton jointMovement = new JoystickButton(driver2, XboxController.Button.kLeftBumper.value);
-    private final JoystickButton wristToPickup = new JoystickButton(driver2, XboxController.Button.kY.value);
-
+    private final JoystickButton wristToLow = new JoystickButton(driver2, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton armToHigh = new JoystickButton(driver2, XboxController.Button.kY.value);
+    private final JoystickButton wristToHome = new JoystickButton(driver2, XboxController.Button.kRightBumper.value);
+    private final JoystickButton armToHome = new JoystickButton(driver2, XboxController.Button.kB.value);
     
 
     /* Subsystems */
@@ -49,7 +50,7 @@ public class RobotContainer {
     // Driving Control //
     public static final double desiredSpeed = 0.8;
     public static double speedController = desiredSpeed;
-    public static double turnController = speedController*0.8;
+    public static double turnController = speedController*0.6;
 
 
 
@@ -61,7 +62,7 @@ public class RobotContainer {
                 s_Swerve, 
                 () -> speedController*Math.pow(-driver.getRawAxis(translationAxis), 3), 
                 () -> speedController*Math.pow(-driver.getRawAxis(strafeAxis), 3), 
-                () -> turnController*Math.pow(-driver.getRawAxis(rotationAxis), 3) * -1, 
+                () -> turnController*Math.pow(-driver.getRawAxis(rotationAxis), 3), 
                 () -> robotCentric.getAsBoolean()
             )
         );
@@ -69,14 +70,15 @@ public class RobotContainer {
         s_Arm.setDefaultCommand(      
             new TeleopArm(
                 s_Arm,
-                () -> driver2.getRawAxis(translationAxis)*-1
+                () -> driver2.getRawAxis(translationAxis)*0.5
+
             )
         );
 
         s_Wrist.setDefaultCommand(
             new TeleopWrist(
                 s_Wrist,
-                () -> driver2.getRawAxis(wristRotationAxis)*-1
+                () -> driver2.getRawAxis(wristRotationAxis)*-0.6
             )
         );
 
@@ -102,12 +104,10 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
         slowDown.onTrue(new SlowDown(s_Swerve));
         slowDown.onFalse(new RegularSpeed(s_Swerve));
-        //wristToPickup.onTrue(new WristAuto(s_Arm));
-        //activateGripper.onTrue(new ActivateGripper(s_Wheels));
-
-
-        //extendArm.onTrue(new InstantCommand(() -> new ExtendArmPress(s_Arm, 5, 0.1)));
-        //retractArm.onTrue(new InstantCommand(() -> new RetractArmPress(s_Arm, 5, 0.1)));
+        armToHome.onTrue(new ArmToHome(s_Arm));
+        armToHigh.onTrue(new ArmToHigh(s_Arm));
+        wristToLow.onTrue(new WristToDown(s_Wrist));
+        wristToHome.onTrue(new WristToHome(s_Wrist));
     }
 
     /**

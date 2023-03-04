@@ -35,28 +35,11 @@ public class GripperWheels extends SubsystemBase
   /*public void Initialize(WPI_TalonFX motor)  {
     this.motor = motor;
   }**/
- 
-  public void TeleOp(boolean spinIn, boolean spinOut)
-  {
 
-    if(spinIn && spinOut)
-    {
-      wheelMotor.set(0);
-    } else if (spinIn)
-    {
-      wheelMotor.set(-0.2);
-    } else if (spinOut)
-    {
-      wheelMotor.set(0.2);
-    } else if (!spinIn && !spinOut)
-    {
-      wheelMotor.set(0);
-    }
-  }
 
   public void Drive(DoubleSupplier positiveRotation, DoubleSupplier negativeRotation)
   {
-    wheelMotor.set((positiveRotation.getAsDouble()-negativeRotation.getAsDouble())/2);
+    wheelMotor.set((positiveRotation.getAsDouble()-negativeRotation.getAsDouble()));
   }
 
   public void Stop()

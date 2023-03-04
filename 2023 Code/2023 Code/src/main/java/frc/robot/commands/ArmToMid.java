@@ -7,25 +7,23 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.CommonMethodExtensions;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
 
-public class TeleopArm extends CommandBase
+public class ArmToMid extends CommandBase
 {
     private final RotateArmMotor s_Arm;
-    private final DoubleSupplier armRotation;
+    
+    
 
-  
-
-    public TeleopArm(RotateArmMotor subsystem, DoubleSupplier armRotation)
+    public ArmToMid(RotateArmMotor subsystem)
     {
         s_Arm = subsystem;
-
-        this.armRotation = armRotation;
         
         addRequirements(s_Arm);
     }
@@ -38,12 +36,18 @@ public class TeleopArm extends CommandBase
     @Override
     public void execute() 
     {  
-        s_Arm.TeleOp(armRotation);
-     }
+        s_Arm.SetPosition(-100, 0.3);
+    }
 
     @Override
     public boolean isFinished() 
     {
-        return true;
+        if(s_Arm.ShoulderPosition()<(-92*2048) + 150 && s_Arm.ShoulderPosition()>(-92*2048)-150 )
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
     }
 }

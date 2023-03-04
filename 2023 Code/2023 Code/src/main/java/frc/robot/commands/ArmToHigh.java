@@ -7,25 +7,23 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.CommonMethodExtensions;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
 
-public class ManualSpinGripperWheels extends CommandBase
+public class ArmToHigh extends CommandBase
 {
-    private GripperWheelsSubsystem s_Arm = new GripperWheelsSubsystem();
-    private DoubleSupplier rotationSpeed;
+    private final RotateArmMotor s_Arm;
+    
+    
 
-    public ManualSpinGripperWheels(GripperWheelsSubsystem subsystem, DoubleSupplier rotation)
+    public ArmToHigh(RotateArmMotor subsystem)
     {
         s_Arm = subsystem;
-        this.rotationSpeed = rotation;
         
         addRequirements(s_Arm);
     }
@@ -38,12 +36,18 @@ public class ManualSpinGripperWheels extends CommandBase
     @Override
     public void execute() 
     {  
-       s_Arm.SpinWheels(rotationSpeed.getAsDouble());
+        s_Arm.SetPosition(-100, 0.4);
     }
 
     @Override
     public boolean isFinished() 
     {
-        return true;
+        if(s_Arm.ShoulderPosition()<(-92*2048) + 1000 && s_Arm.ShoulderPosition()>(-92*2048)-1000 )
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
     }
 }

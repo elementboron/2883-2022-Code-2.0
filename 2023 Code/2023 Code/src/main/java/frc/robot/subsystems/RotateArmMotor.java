@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
+import javax.lang.model.util.ElementScanner14;
 import javax.sql.rowset.WebRowSet;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -27,11 +28,44 @@ import frc.robot.Robot;
 public class RotateArmMotor extends SubsystemBase 
 {
 
-  WPI_TalonFX motorRotate = new WPI_TalonFX(Constants.Swerve.rotateArmID);
+  public WPI_TalonFX motorRotate = new WPI_TalonFX(Constants.Swerve.rotateArmID);
  
   public void TeleOp(DoubleSupplier armRotation) 
   {
-    motorRotate.set(armRotation.getAsDouble());
+      motorRotate.set(armRotation.getAsDouble());
+  }
+
+  public void ShoulderSoftLimits()
+  {
+    motorRotate.configForwardSoftLimitEnable(true);
+    motorRotate.configForwardSoftLimitThreshold(0);
+    motorRotate.configReverseSoftLimitEnable(true);
+    motorRotate.configReverseSoftLimitThreshold(-110*2048);
+  }
+
+  public void SetPosition(double desiredPosition, double speed)
+  {
+    double targetPosition = desiredPosition * 2048;
+    if(motorRotate.getSelectedSensorPosition()>targetPosition)
+    {
+      motorRotate.set((speed*((4*(Math.abs((motorRotate.getSelectedSensorPosition()-targetPosition))/targetPosition)))-0.1));
+    } else if (motorRotate.getSelectedSensorPosition()<targetPosition)
+    {
+      motorRotate.set((-speed*((4*(Math.abs((motorRotate.getSelectedSensorPosition()-targetPosition))/targetPosition)))+0.1));
+    }
+  }
+
+  public void ArmToZero()
+  {
+    if(motorRotate.getSelectedSensorPosition()<0)
+    {
+      motorRotate.set(0.5);
+    } 
+  }
+
+  public double ShoulderPosition()
+  {
+    return motorRotate.getSelectedSensorPosition();
   }
 
   public void UpdateSmartDashNums()

@@ -7,29 +7,25 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.Robot;
+import frc.robot.CommonMethodExtensions;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
 
-public class ActivateGripper extends CommandBase
+public class WristToHome extends CommandBase
 {
-    private Pneumatics s_Pneumatics = new Pneumatics();
+    private final WristMotor s_Wrist;
+    
+    
 
-    public ActivateGripper(Pneumatics subsystem)
+    public WristToHome(WristMotor subsystem)
     {
-        s_Pneumatics = subsystem;
+        s_Wrist = subsystem;
         
-        addRequirements(s_Pneumatics);
+        addRequirements(s_Wrist);
     }
 
     @Override
@@ -40,13 +36,18 @@ public class ActivateGripper extends CommandBase
     @Override
     public void execute() 
     {  
-       s_Pneumatics.ActivateGrippers();
-
+        s_Wrist.ToHome();
     }
 
     @Override
     public boolean isFinished() 
     {
-        return true;
+        if(s_Wrist.WristPosition()>-1)
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
     }
 }

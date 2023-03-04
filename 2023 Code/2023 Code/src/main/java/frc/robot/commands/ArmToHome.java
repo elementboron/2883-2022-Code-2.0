@@ -7,27 +7,22 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
 
-public class ExtendAndRetractMaster extends CommandBase
+public class ArmToHome extends CommandBase
 {
-    private ArmExtensionMotor s_Arm = new ArmExtensionMotor();
-    private double extensionDistance;
-    private double extensionSpeed;
+    private final RotateArmMotor s_Arm;
+    
+    
 
-    public ExtendAndRetractMaster(ArmExtensionMotor subsystem, double extensionDistance, double extensionSpeed)
+    public ArmToHome(RotateArmMotor subsystem)
     {
         s_Arm = subsystem;
-        this.extensionSpeed = extensionDistance;
-        this.extensionSpeed = extensionSpeed;
         
         addRequirements(s_Arm);
     }
@@ -40,13 +35,18 @@ public class ExtendAndRetractMaster extends CommandBase
     @Override
     public void execute() 
     {  
-        
-       s_Arm.SpinOut(new WPI_TalonFX(18), extensionSpeed, extensionDistance, true);
+        s_Arm.ArmToZero();
     }
 
     @Override
     public boolean isFinished() 
     {
-        return true;
+        if(s_Arm.ShoulderPosition()>-10)
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
     }
 }

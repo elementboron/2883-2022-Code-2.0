@@ -15,6 +15,7 @@ import javax.sql.rowset.WebRowSet;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,62 +33,47 @@ public class WristMotor extends SubsystemBase
   CANSparkMax wristMotor = Robot.wristMotor;
   RelativeEncoder encoder = wristMotor.getEncoder();
   
-  WPI_TalonFX motor;
-
-  /*public void Initialize(WPI_TalonFX motor)  {
-    this.motor = motor;
-  }**/
  
   public void TeleOpWrist(DoubleSupplier wristRotation) 
   {
     wristMotor.set(wristRotation.getAsDouble());
-
   }
 
-  public void setWristRotation(double speed, double desiredPosition)
+  public void ToPosition(double desiredPosition, double speed)
   {
-    if(encoder.getPosition()>desiredPosition){
-
-      InternalSpinWristReverse(speed, desiredPosition);
-
-    } else if (encoder.getPosition()<desiredPosition){
-
-      InternalSpinWristForward(speed, desiredPosition);
-
-    } else if (encoder.getPosition() == desiredPosition){
-
-      Stop();
-
-    }
-
-  }
-
-  public void InternalSpinWristForward(double speed, double distance)
-  {
-    if(encoder.getPosition()<distance)
+    if(encoder.getPosition()<desiredPosition)
     {
       wristMotor.set(speed);
-    } else {
-      wristMotor.set(0);
+    } else if(encoder.getPosition()>desiredPosition)
+    {
+      wristMotor.set(-speed);
     }
   }
 
-  public void InternalSpinWristReverse(double speed, double distance)
+  public void ToHome()
   {
-    if(encoder.getPosition()<distance)
+    if(encoder.getPosition()<0)
     {
-      wristMotor.set(-speed);
-    } else {
-      wristMotor.set(0);
+      wristMotor.set(0.4);
     }
   }
+
+  public double WristPosition(){
+    return encoder.getPosition();
+  }
+
+  public void SetWristSoftLimits()
+  {
+    encoder.setPosition(0);
+    wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+    wristMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
+  }
+
 
   public void UpdateSmartDashNums()
   {
 
-    SmartDashboard.putNumber("WristMotor Temperature:", wristMotor.getMotorTemperature());
     SmartDashboard.putNumber("WristMotor Rotations:", encoder.getPosition());
-
   }
   
 

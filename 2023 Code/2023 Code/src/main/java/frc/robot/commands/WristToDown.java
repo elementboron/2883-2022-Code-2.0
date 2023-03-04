@@ -7,20 +7,25 @@
 
 package frc.robot.commands;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.CommonMethodExtensions;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
 
-public class StopExtendArm extends CommandBase
+public class WristToDown extends CommandBase
 {
-    private ArmExtensionMotor s_Arm = new ArmExtensionMotor();
+    private final WristMotor s_Wrist;
+    
+    
 
-    public StopExtendArm(ArmExtensionMotor subsystem)
+    public WristToDown(WristMotor subsystem)
     {
-        s_Arm = subsystem;
+        s_Wrist = subsystem;
         
-        addRequirements(s_Arm);
+        addRequirements(s_Wrist);
     }
 
     @Override
@@ -31,12 +36,18 @@ public class StopExtendArm extends CommandBase
     @Override
     public void execute() 
     {  
-       s_Arm.Stop();
+        s_Wrist.ToPosition(-95, 0.3);
     }
 
     @Override
     public boolean isFinished() 
     {
-        return true;
+        if(s_Wrist.WristPosition()<(-95 + 2) && s_Wrist.WristPosition()>(-95-2))
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
     }
 }
