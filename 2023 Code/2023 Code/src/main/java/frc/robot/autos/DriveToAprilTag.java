@@ -1,7 +1,6 @@
 package frc.robot.autos;
 
 import frc.robot.Constants;
-import frc.robot.autos.Actions.RotateUntilPose;
 import frc.robot.subsystems.LimelightReader;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.LimelightReader.BotPoseInfoHolder;
@@ -31,7 +30,6 @@ public class DriveToAprilTag extends SequentialCommandGroup {
 
     public DriveToAprilTag(Swerve s_Swerve){
         this.s_Swerve=s_Swerve;
-        RotateUntilPose rotboy = new RotateUntilPose();
 
         GenerateCurrentTrajectory();
         addCommands(
@@ -43,8 +41,6 @@ public class DriveToAprilTag extends SequentialCommandGroup {
             new InstantCommand(() -> s_Swerve.resetOdometry(trajectoryApril.getInitialPose())),
             new InstantCommand(() -> s_Swerve.zeroGyro()),
             AprilCommand**/
-
-
         );
     }
 
