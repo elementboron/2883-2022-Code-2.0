@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
@@ -101,6 +102,28 @@ public class Swerve extends SubsystemBase {
     public void zeroGyro(){
         gyro.setYaw(0);
     }
+
+    public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
+        return new SequentialCommandGroup(
+             new InstantCommand(() -> {
+               // Reset odometry for the first path you run during auto
+               if(isFirstPath){
+                   this.resetOdometry(traj.getInitialHolonomicPose());
+               }
+             }),
+             new PPSwerveControllerCommand(
+                 traj, 
+                 this::getPose, // Pose supplier
+                 Constants.Swerve.swerveKinematics, // SwerveDriveKinematics
+                 new PIDController(Constants.AutoConstants.kPXController, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                 new PIDController(Constants.AutoConstants.kPYController, 0, 0), // Y controller (usually the same values as X controller)
+                 new PIDController(Constants.AutoConstants.kPThetaController, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                 this::setModuleStates, // Module states consumer
+                 true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+                 this // Requires this drive subsystem
+             )
+         );
+     }
 
     public Rotation2d getYaw() {
         return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
