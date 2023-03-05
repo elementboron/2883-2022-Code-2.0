@@ -15,6 +15,7 @@ import javax.sql.rowset.WebRowSet;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -54,7 +55,7 @@ public class WristMotor extends SubsystemBase
   {
     if(encoder.getPosition()<0)
     {
-      wristMotor.set(0.4);
+      wristMotor.set(0.7);
     }
   }
 
@@ -65,8 +66,9 @@ public class WristMotor extends SubsystemBase
   public void SetWristSoftLimits()
   {
     encoder.setPosition(0);
-    wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+    wristMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
     wristMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
+    wristMotor.setIdleMode(IdleMode.kBrake);
   }
 
 
@@ -86,4 +88,5 @@ public class WristMotor extends SubsystemBase
   {
     return true;
   }
+
 }

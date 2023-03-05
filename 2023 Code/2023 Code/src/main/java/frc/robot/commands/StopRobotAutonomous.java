@@ -9,23 +9,24 @@ package frc.robot.commands;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.CommonMethodExtensions;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
 
-public class WristToDown extends CommandBase
+public class StopRobotAutonomous extends CommandBase
 {
-    private final WristMotor s_Wrist;
+    private final Swerve s_Swerve;
     
     
 
-    public WristToDown(WristMotor subsystem)
+    public StopRobotAutonomous(Swerve subsystem)
     {
-        s_Wrist = subsystem;
+        s_Swerve = subsystem;
         
-        addRequirements(s_Wrist);
+        addRequirements(s_Swerve);
     }
 
     @Override
@@ -36,18 +37,12 @@ public class WristToDown extends CommandBase
     @Override
     public void execute() 
     {  
-        s_Wrist.ToPosition(-228, 0.4);
+        s_Swerve.drive(new Translation2d(0,0), 0, false, false);
     }
 
     @Override
     public boolean isFinished() 
     {
-        if(s_Wrist.WristPosition()<(-228 + 2) && s_Wrist.WristPosition()>(-228-2))
-        {
-            return true;
-        } else
-        {
-            return false;
-        }
+        return true;
     }
 }

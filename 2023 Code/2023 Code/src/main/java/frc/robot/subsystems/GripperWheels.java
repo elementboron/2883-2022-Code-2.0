@@ -47,6 +47,16 @@ public class GripperWheels extends SubsystemBase
     wheelMotor.set(0);
   }
 
+  public void SuckIn()
+  {
+    wheelMotor.set(1);
+  }
+
+  public void SpitOut()
+  {
+    wheelMotor.set(-1);
+  }
+
   public boolean isFinished() 
   {
     return true;

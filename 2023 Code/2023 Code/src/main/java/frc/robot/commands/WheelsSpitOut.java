@@ -15,17 +15,17 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
 
-public class WristToDown extends CommandBase
+public class WheelsSpitOut extends CommandBase
 {
-    private final WristMotor s_Wrist;
+    private final GripperWheels s_Wheels;
     
     
 
-    public WristToDown(WristMotor subsystem)
+    public WheelsSpitOut(GripperWheels subsystem)
     {
-        s_Wrist = subsystem;
+        s_Wheels = subsystem;
         
-        addRequirements(s_Wrist);
+        addRequirements(s_Wheels);
     }
 
     @Override
@@ -36,18 +36,12 @@ public class WristToDown extends CommandBase
     @Override
     public void execute() 
     {  
-        s_Wrist.ToPosition(-228, 0.4);
+        s_Wheels.SpitOut();
     }
 
     @Override
     public boolean isFinished() 
     {
-        if(s_Wrist.WristPosition()<(-228 + 2) && s_Wrist.WristPosition()>(-228-2))
-        {
-            return true;
-        } else
-        {
-            return false;
-        }
+        return true;
     }
 }

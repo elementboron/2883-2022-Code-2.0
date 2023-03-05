@@ -6,7 +6,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import frc.robot.autos.AutoBalanceTesting;
+import frc.robot.autos.PathPlanningAuto;
+import frc.robot.autos.RotateTesting;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -37,7 +39,7 @@ public class RobotContainer {
     private final JoystickButton armToHigh = new JoystickButton(driver2, XboxController.Button.kY.value);
     private final JoystickButton wristToHome = new JoystickButton(driver2, XboxController.Button.kRightBumper.value);
     private final JoystickButton armToHome = new JoystickButton(driver2, XboxController.Button.kB.value);
-    
+    private final JoystickButton wristToHigh = new JoystickButton(driver2, XboxController.Button.kA.value);    
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -78,7 +80,7 @@ public class RobotContainer {
         s_Wrist.setDefaultCommand(
             new TeleopWrist(
                 s_Wrist,
-                () -> driver2.getRawAxis(wristRotationAxis)*-0.6
+                () -> driver2.getRawAxis(wristRotationAxis)*-0.8
             )
         );
 
@@ -108,6 +110,7 @@ public class RobotContainer {
         armToHigh.onTrue(new ArmToHigh(s_Arm));
         wristToLow.onTrue(new WristToDown(s_Wrist));
         wristToHome.onTrue(new WristToHome(s_Wrist));
+        wristToHigh.onTrue(new WristToHigh(s_Wrist));
     }
 
     /**
@@ -117,6 +120,9 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return null;
+        final Command auto = new RotateTesting(s_Swerve, s_Arm, s_Wrist, s_Wheels);
+        //final Command auto = new PathPlanningAuto(s_Swerve);
+        //final Command auto = new AutoBalanceTesting(s_Swerve);
+        return auto;
     }
 }

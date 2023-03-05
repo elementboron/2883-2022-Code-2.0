@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.Swerve;
 import frc.robot.subsystems.RotateArmMotor;
 //import frc.robot.subsystems.GripperWheels;
 //import frc.robot.subsystems.Pneumatics;
@@ -47,6 +48,7 @@ public class Robot extends TimedRobot {
 
   private final RotateArmMotor s_Arm = new RotateArmMotor();
   private final WristMotor s_Wrist = new WristMotor();
+  private final Swerve s_Swerve = new Swerve();
   //private final Pneumatics s_Pneumatics = new Pneumatics();
   //public final Solenoid gripper = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Swerve.gripperSolenoidID);
 
@@ -70,18 +72,10 @@ public class Robot extends TimedRobot {
     s_Wrist.SetWristSoftLimits();
     ctreConfigs = new CTREConfigs();
     //s_Arm.Initialize(new WPI_TalonFX(18));
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
+
     m_robotContainer = new RobotContainer();
   }
 
-  /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
-   */
   @Override
   public void robotPeriodic() {
 
@@ -89,38 +83,18 @@ public class Robot extends TimedRobot {
     NetworkTableEntry tx = table.getEntry("tx");
     NetworkTableEntry ty = table.getEntry("ty");
     NetworkTableEntry ta = table.getEntry("ta");
-    double targetOffsetAngle_Vertical = ty.getDouble(0.0);
-    
-    // how many degrees back is your limelight rotated from perfectly vertical?
-    double limelightMountAngleDegrees = 90.0;
-    
-    // distance from the center of the Limelight lens to the floor
-    double limelightLensHeightInches = 31.5;
-    
-    // distance from the target to the floor
-    double goalHeightInches = 25.5;
-    
-    double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
-    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
 
-    double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches)/Math.tan(angleToGoalRadians);
-    //read values periodically
     double x = tx.getDouble(0.0);
     double y = ty.getDouble(0.0);
     double area = ta.getDouble(0.0);
-      
-    //post to smart dashboard periodically
+
     SmartDashboard.putNumber("LimelightX", x);
     SmartDashboard.putNumber("LimelightY", y);
     SmartDashboard.putNumber("LimelightArea", area);
-    SmartDashboard.putNumber("Estimated Distance in Inches", distanceFromLimelightToGoalInches);
+
     s_Arm.UpdateSmartDashNums();
     s_Wrist.UpdateSmartDashNums();
-
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
+    
     CommandScheduler.getInstance().run();
   }
 
